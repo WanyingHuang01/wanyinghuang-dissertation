@@ -189,7 +189,9 @@ def construct_forward_map(
         n_segments * n_params_per_seg, n_paths
     ).T  # (n_paths, n_segments*3)
 
-    logger.debug("construct_forward_map: returning forward matrix M with shape %s", M.shape)
+    logger.debug(
+        "construct_forward_map: returning forward matrix M with shape %s", M.shape
+    )
 
     return M
 
@@ -207,8 +209,7 @@ def construct_Cd(ref_phase: pd.Series, ic_tt: pd.Series) -> np.ndarray:
         "cd": 0.29,
         "df": 0.95,
     }
-    # ensure we return a NumPy array with float dtype
-    return (ref_phase.map(noise_levels) / ic_tt).astype(float).to_numpy()
+    return np.diag((ref_phase.map(noise_levels) / ic_tt).astype(float).to_numpy())
 
 
 def main():
@@ -236,12 +237,13 @@ def main():
     n_data, n_params = A.shape
     logger.info("Forward matrix A shape: %s", A.shape)
 
-
-    inferred = [
-        GaussianComponent(A, np.zeros(n_params), 10.0 * np.eye(n_params))
-    ]
+    inferred = [GaussianComponent(A, np.zeros(n_params), 10.0 * np.eye(n_params))]
     nuisance = [
-        GaussianComponent(np.eye(n_data), np.zeros(n_data), np.eye(n_data))
+        GaussianComponent(
+            np.eye(n_data),
+            np.zeros(n_data),
+            construct_Cd(df.reference_phase, df.inner_core_travel_time),
+        )
     ]
 
     logger.info(
