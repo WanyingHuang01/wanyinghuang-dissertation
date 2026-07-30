@@ -165,7 +165,7 @@ def construct_forward_map(
     dC_b = np.broadcast_to(dC_stack[None, ...], (n_segments, *dC_stack.shape))
 
     # Contract with ray-direction outer-products -> (n_segments, 5, n_paths)
-    dt_dC = calculate_relative_traveltime_voigt(path_directions, dC_b)
+    dt_dC = calculate_relative_traveltime_voigt(path_directions, dC_b, normalisation=-0.5)
 
     logger.debug(
         "construct_forward_map: weights.shape=%s path_directions.shape=%s",
