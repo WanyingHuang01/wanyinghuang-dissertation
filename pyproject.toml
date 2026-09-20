@@ -10,6 +10,11 @@ dependencies = [
     "raytracer",
     "pandas>=3.0.2",
     "pyarrow>=24.0.0",
+    "matplotlib>=3.11.1",
+    "scipy>=1.18.1",
+    "cartopy>=0.25.0",
+    "obspy>=1.5.1",
+    "numpy>=2.5.1",
 ]
 
 [tool.uv.sources]
